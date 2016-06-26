@@ -76,7 +76,7 @@
 
         } else {
 
-            url = path + 'chuong-' + count;
+            url = path + '-chuong-' + count;
 
             GM_xmlhttpRequest({
                 method: 'GET',
@@ -91,7 +91,7 @@
 
                         $download.text(count + '/' + max).css('background', 'orange');
 
-                        if (response.finalUrl.slice(-8) === '/chuong/') {
+                        if (response.finalUrl.slice(-8) === '-chuong-') {
 
                             $download.css('background', 'black');
                             console.log('%cSkip: ' + url, 'color:orange;');
@@ -128,8 +128,10 @@
 
     }
 
+    $('<button id="t3download" style="margin-bottom: 30px; background: #FFA129; color: #000; padding: 10px 15px; border: 1px solid; cursor: pointer;">Download</button>').insertBefore('#manga-summary');
+
     // replace div#rating by Download button
-    var $download = $('#rating'),
+    var $download = $('#t3download'),
         count = 1,
         max = parseInt($('#manga-chapter').find('.chapter-name').eq(0).find('a').attr('href').match(/chuong-(\d+)/)[1], 10),
         begin,
@@ -143,9 +145,10 @@
         url,
         credits = '<p>Truyện được tải từ: TruyenTranhTuan - http://truyentranhtuan.com</p><p>Userscript được viết bởi: chugnvh - http://kiemtruyen.net</p>';
 
+    path = path.slice(0, -1);
     window.URL = window.URL || window.webkitURL;
 
-    $download.text('Download').css('background', 'orange').on('click', function (e) {
+    $download.on('click', function (e) {
 
         e.preventDefault();
 
