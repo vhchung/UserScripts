@@ -1,0 +1,45 @@
+// ==UserScript==
+// @name         mp3 Zing download 320
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       shess
+// @match        http://mp3.zing.vn/bai-hat/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+var getJSON = function(url, successHandler, errorHandler) {
+	var xhr = typeof XMLHttpRequest != 'undefined'
+		? new XMLHttpRequest()
+		: new ActiveXObject('Microsoft.XMLHTTP');
+	xhr.open('get', url, true);
+	xhr.responseType = 'json';
+	xhr.onreadystatechange = function() {
+		var status;
+		var data;
+		if (xhr.readyState == 4) {
+			status = xhr.status;
+			if (status == 200) {
+				successHandler && successHandler(xhr.response);
+			} else {
+				errorHandler && errorHandler(status);
+			}
+		}
+	};
+	xhr.send();
+};
+var url=window.location.href;
+var arr = url.split('/');
+var id=arr.pop();
+id=id.split('.')[0];
+var dl='http://api.mp3.zing.vn/api/mobile/song/getsonginfo?requestdata={"id":"' + id + '"}';
+getJSON(dl, function(data) {
+    var filename = data.title + '_' + data.artist;
+    $('.social-mini').eq(0).html('<a id="dl320-shess" href="' + data.source[320]  + '">Download 320</a>');
+    $('#dl320-shess').attr('download', filename);
+}, function(status) {
+	alert('Something went wrong.');
+});
+})();
